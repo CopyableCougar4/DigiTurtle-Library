@@ -1,0 +1,8 @@
+This library may be used by anybody who wants to use it. However, there are two conditions:
+
+- This library only evolves as my personal needs evolve
+- I would like credit given to me (Jonathan)
+
+Libraries used:
+- LWJGL
+- TWL's PNGDecoder
