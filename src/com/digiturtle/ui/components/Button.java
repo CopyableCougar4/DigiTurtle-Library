@@ -1,12 +1,16 @@
 package com.digiturtle.ui.components;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 import com.digiturtle.parsing.ScriptedAction;
 import com.digiturtle.ui.Component;
 import com.digiturtle.ui.Effect;
+import com.digiturtle.ui.GLFont;
+import com.digiturtle.ui.NinePatch;
 import com.digiturtle.ui.UI;
 import com.digiturtle.common.ComponentRegion;
+import com.digiturtle.common.DisplayList;
 import com.digiturtle.common.StaticVBO;
 import com.digiturtle.common.Texture;
 import com.digiturtle.ui.Theme;
@@ -22,6 +26,7 @@ public class Button implements Component {
 	private UI ui;
 	private ArrayList<Effect> effects = new ArrayList<Effect>();
 	private boolean hover = false;
+	private DisplayList text;
 	
 	public Button(int layer, ComponentRegion region, Theme theme) {
 		this(layer, region, theme, Theme.BUTTON);
@@ -30,23 +35,35 @@ public class Button implements Component {
 		this.layer = layer;
 		this.region = region;
 		this.stylesheet = stylesheet;
-		normal = new StaticVBO(4, stylesheet.getID());
-		normal.uploadTextures(0, 0, 1, .5f);
-		normal.uploadVertices(region);
-		pressed = new StaticVBO(4, stylesheet.getID());
-		pressed.uploadTextures(0, .5f, 1, 1);
-		pressed.uploadVertices(region);
+		normal = NinePatch.generate(new float[]{ 0, 0, 1, 0.5f }, region, stylesheet, new float[]{ 100, 200 });
+//		normal = new StaticVBO(4, stylesheet.getID());
+//		normal.uploadTextures(0, 0, 1, .5f);
+//		normal.uploadVertices(region);
+		pressed = NinePatch.generate(new float[]{ 0, 0.5f, 1, 1 }, region, stylesheet, new float[]{ 100, 200 });
+//		pressed = new StaticVBO(4, stylesheet.getID());
+//		pressed.uploadTextures(0, .5f, 1, 1);
+//		pressed.uploadVertices(region);
 	}
 	public Button(int layer, ComponentRegion region, Theme theme, String target) {
 		this.layer = layer;
 		this.region = region;
 		stylesheet = theme.get(target);
-		normal = new StaticVBO(4, stylesheet.getID());
-		normal.uploadTextures(0, 0, 1, .5f);
-		normal.uploadVertices(region);
-		pressed = new StaticVBO(4, stylesheet.getID());
-		pressed.uploadTextures(0, .5f, 1, 1);
-		pressed.uploadVertices(region);
+		normal = NinePatch.generate(new float[]{ 0, 0, 1, 0.5f }, region, stylesheet, new float[]{ 100, 200 });
+//		normal = new StaticVBO(4, stylesheet.getID());
+//		normal.uploadTextures(0, 0, 1, .5f);
+//		normal.uploadVertices(region);
+		pressed = NinePatch.generate(new float[]{ 0, 0.5f, 1, 1 }, region, stylesheet, new float[]{ 100, 200 });
+//		pressed = new StaticVBO(4, stylesheet.getID());
+//		pressed.uploadTextures(0, .5f, 1, 1);
+//		pressed.uploadVertices(region);
+	}
+	
+	public Button setText(String text, int fontsize, Theme theme, Color color) {
+		GLFont font = new GLFont(fontsize, theme);
+		float offsetx = (region.width - font.getWidth(text)) / 2;
+		float offsety = (region.height - font.getHeight(text)) / 2;
+		this.text = font.drawCachedText(region.x + offsetx, region.y + offsety, text, color);
+		return this;
 	}
 	
 	public Button setClickAction(String data, UI ui) {

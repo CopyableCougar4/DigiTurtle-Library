@@ -2,6 +2,7 @@ package com.digiturtle.common;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 public class Sorter<E> {
 
@@ -22,6 +23,10 @@ public class Sorter<E> {
 	
 	public ArrayList<E> get(int index) {
 		return sorted.get(index);
+	}
+	
+	public Set<Integer> getKeys() {
+		return sorted.keySet();
 	}
 
 }

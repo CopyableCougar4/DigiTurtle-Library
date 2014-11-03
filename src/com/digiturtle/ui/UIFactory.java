@@ -90,6 +90,11 @@ public class UIFactory {
 				return new Bar(layer, region, theme);
 			case "BUTTON":
 				if (element.getAttribute("source") != null) {
+					if (element.getAttribute("label") != null) {
+						int _fontsize = Math.round(get(element, "fontsize"));
+						Color _color = parse(element.getAttribute("textColor"));
+						return new Button(layer, region, theme.unmapped(element.getAttribute("source"))).setClickAction(element.getAttribute("action"), ui).setText(element.getAttribute("label"), _fontsize, theme, _color);
+					}
 					return new Button(layer, region, theme.unmapped(element.getAttribute("source"))).setClickAction(element.getAttribute("action"), ui);
 				} else {
 					return new Button(layer, region, theme).setClickAction(element.getAttribute("action"), ui);

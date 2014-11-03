@@ -1,5 +1,6 @@
 package com.digiturtle.entities;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.digiturtle.common.DisplayList;
@@ -81,6 +82,19 @@ public class EntitySystem {
 				entity.getAI().tick(entity);
 			}
 		}
+	}
+	
+	// Not multi-threaded access safe
+	public Entity getEntity(String username) {
+		for (int layer : filedEntities.getKeys()) {
+			ArrayList<Entity> entities = filedEntities.get(layer);
+			for (Entity entity : entities) {
+				if (entity.getUsername().equalsIgnoreCase(username)) {
+					return entity;
+				}
+			}
+		}
+		return null;
 	}
 	
 	/** Use sparingly */
