@@ -38,6 +38,14 @@ public class Sound {
 			return;
 	    }
 	}
+	
+	public Sound(OggData decoder) {
+		if (!inited) init();
+		if(loadALData(decoder) == AL_FALSE) {
+			System.out.println("Error loading data.");
+			return;
+	    }
+	}
 
 	private int loadALData(OggData data) {
 		buffer = alGenBuffers();
