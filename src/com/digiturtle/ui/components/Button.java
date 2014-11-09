@@ -35,24 +35,24 @@ public class Button implements Component {
 		this.layer = layer;
 		this.region = region;
 		this.stylesheet = stylesheet;
-		normal = NinePatch.generate(new float[]{ 0, 0, 1, 0.5f }, region, stylesheet, new float[]{ 100, 200 });
-//		normal = new StaticVBO(4, stylesheet.getID());
-//		normal.uploadTextures(0, 0, 1, .5f);
-//		normal.uploadVertices(region);
-		pressed = NinePatch.generate(new float[]{ 0, 0.5f, 1, 1 }, region, stylesheet, new float[]{ 100, 200 });
-//		pressed = new StaticVBO(4, stylesheet.getID());
-//		pressed.uploadTextures(0, .5f, 1, 1);
-//		pressed.uploadVertices(region);
+//		normal = NinePatch.generate(new float[]{ 0, 0, 1, 0.5f }, region, stylesheet, new float[]{ 100, 200 });
+		normal = new StaticVBO(4, stylesheet.getID());
+		normal.uploadTextures(0, 0, 1, .5f);
+		normal.uploadVertices(region);
+//		pressed = NinePatch.generate(new float[]{ 0, 0.5f, 1, 1 }, region, stylesheet, new float[]{ 100, 200 });
+		pressed = new StaticVBO(4, stylesheet.getID());
+		pressed.uploadTextures(0, .5f, 1, 1);
+		pressed.uploadVertices(region);
 	}
 	public Button(int layer, ComponentRegion region, Theme theme, String target) {
 		this.layer = layer;
 		this.region = region;
 		stylesheet = theme.get(target);
-		normal = NinePatch.generate(new float[]{ 0, 0, 1, 0.5f }, region, stylesheet, new float[]{ 100, 200 });
+		normal = NinePatch.generate(new float[]{ 0, 0, 1, 0.5f }, region, stylesheet, new float[]{ 30, 60 });
 //		normal = new StaticVBO(4, stylesheet.getID());
 //		normal.uploadTextures(0, 0, 1, .5f);
 //		normal.uploadVertices(region);
-		pressed = NinePatch.generate(new float[]{ 0, 0.5f, 1, 1 }, region, stylesheet, new float[]{ 100, 200 });
+		pressed = NinePatch.generate(new float[]{ 0, 0.5f, 1, 1 }, region, stylesheet, new float[]{ 30, 60 });
 //		pressed = new StaticVBO(4, stylesheet.getID());
 //		pressed.uploadTextures(0, .5f, 1, 1);
 //		pressed.uploadVertices(region);
@@ -167,6 +167,7 @@ public class Button implements Component {
 		} else {
 			normal.render();
 		}
+		if (text != null) text.render();
 	}
 
 	@Override

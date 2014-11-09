@@ -22,6 +22,8 @@ public class Image implements Component {
 		image = new StaticVBO(4, texture.getID());
 		image.uploadVertices(region);
 		image.uploadTextures(0, 0, 1, 1);
+		this.region = region;
+		this.layer = layer;
 	}
 	
 	@Override

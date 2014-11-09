@@ -49,7 +49,7 @@ public class SerializedSound {
 		public OggData getOgg() {
 			OggData oggData = new OggData();
 			ByteBuffer buffer = ByteBuffer.allocateDirect(data.length);
-			for (byte d : data) buffer.put(d);
+			buffer.put(data);
 			buffer.flip();
 			oggData.data = buffer;
 			oggData.rate = rate;

@@ -48,6 +48,7 @@ public class UIFactory {
 					// Load the theme for this UI
 					theme = new Theme(childNode.getAttribute("source"));
 					String background = uiXML.getAttribute("background");
+					ui.setTheme(theme);
 					if (theme.unmapped(background) != null) {
 						System.out.println("Mapping background: " + background);
 						ui.setBackground(background, theme);
@@ -90,13 +91,13 @@ public class UIFactory {
 				return new Bar(layer, region, theme);
 			case "BUTTON":
 				if (element.getAttribute("source") != null) {
+					return new Button(layer, region, theme.unmapped(element.getAttribute("source"))).setClickAction(element.getAttribute("action"), ui);
+				} else {
 					if (element.getAttribute("label") != null) {
 						int _fontsize = Math.round(get(element, "fontsize"));
 						Color _color = parse(element.getAttribute("textColor"));
-						return new Button(layer, region, theme.unmapped(element.getAttribute("source"))).setClickAction(element.getAttribute("action"), ui).setText(element.getAttribute("label"), _fontsize, theme, _color);
+						return new Button(layer, region, theme).setClickAction(element.getAttribute("action"), ui).setText(element.getAttribute("label"), _fontsize, theme, _color);
 					}
-					return new Button(layer, region, theme.unmapped(element.getAttribute("source"))).setClickAction(element.getAttribute("action"), ui);
-				} else {
 					return new Button(layer, region, theme).setClickAction(element.getAttribute("action"), ui);
 				}
 			case "CHECKBOX":
@@ -122,6 +123,9 @@ public class UIFactory {
 			case "DRAGGABLEPANE":
 				return new DraggablePane(layer, region, get(element, "renderwidth"), get(element, "renderheight")).setRendering(element.getAttribute("renderable"), ui);
 			case "EDITFIELD":
+				if (element.getAttribute("source") != null) {
+					return new EditField(layer, region, theme.unmapped(element.getAttribute("source")), theme);
+				}
 				return new EditField(layer, region, theme);
 			case "FADINGTEXT":
 				int fontSizeFading = Integer.parseInt(element.getAttribute("size"));
@@ -136,7 +140,7 @@ public class UIFactory {
 				String text = element.getAttribute("text");
 				return new Hyperlink(layer, region, text, fontSizeLink, theme, colorLink);
 			case "IMAGE":
-				return new Image(layer, region, Texture.loadTexture(element.getAttribute("source")));
+				return new Image(layer, region, theme.unmapped(element.getAttribute("source")));
 			case "MENU":
 				Menu menu = new Menu(layer, width, height, theme);
 				ChildIterator rootIterator = new ChildIterator(element) {;
@@ -194,6 +198,12 @@ public class UIFactory {
 				GLFont glFont = new GLFont(textSize, theme);
 				Color colorText = parse(element.getAttribute("color"));
 				String textOutput = element.getAttribute("text");
+				if (element.hasAttribute("vcentered")) {
+					float twidth = glFont.getWidth(textOutput);
+					float offsetx = (ui.getRegion().width - twidth) / 2;
+					float nx = ui.getRegion().x + offsetx;
+					region.x = nx;					
+				}
 				return new Text(layer, glFont, colorText, textOutput, region);
 		}
 		return null;

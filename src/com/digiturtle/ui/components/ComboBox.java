@@ -129,37 +129,12 @@ public class ComboBox implements Component {
 			MouseInput input = new MouseInput(x, y);
 			int index = 0;
 			for (ComboBoxOption option : options.keySet()) {
-				if (index == options.size() - 1) {
-					boolean found = false;
-					if (input.x > region.x + 15 && input.y > region.y + region.height + (0.8f * region.height * index) + 2) {
-						if (input.x - (region.x + 15) < region.width + region.height - 23) {
-							if (input.y - (region.y + region.height + (0.8f * region.height * index) + 2) < region.height - 6) {
-								options.put(option, true);
-								found = true;
-								close();
-							}
-						}
-					}
-					if (!found) options.put(option, false);
-				} else {
-					boolean found = false;
-					if (input.x > region.x + 15 && input.y > region.y + region.height + (0.8f * region.height * index) + 2) {
-						if (input.x - (region.x + 15) < region.width + region.height - 23) {
-							if (input.y - (region.y + region.height + (0.8f * region.height * index) + 2) < region.height - 6) {
-								options.put(option, true);
-								found = true;
-								close();
-							}
-						}
-					}
-					if (!found) options.put(option, false);
-				}
+				options.put(option, contains(input, index));
+				showOptions = (contains(input, index));
 				index++;
 			}
 		} else {
-			if (!open.getRegion().contains(x, y)) {
-				close();
-			}
+			showOptions = open.getRegion().contains(x, y);
 		}
 	}
 
@@ -203,64 +178,49 @@ public class ComboBox implements Component {
 	public ComponentRegion getRegion() {
 		return region;
 	}
+	
+	private boolean contains(MouseInput input, int index) {
+		return (input.x > region.x + 15 && input.y > region.y + region.height + (0.8f * region.height * index) + 2)
+			&& (input.x - (region.x + 15) < region.width + region.height - 23)
+			&& (input.y - (region.y + region.height + (0.8f * region.height * index) + 2) < region.height - 6);
+	}
 
 	@Override
 	public void render() {
-		{	// Render the options
-			if (showOptions) {
-				int index = 0;
-				MouseInput input = InputSystem.getSystem().getEvent();
-				for (ComboBoxOption option : options.keySet()) {
-					if (index == options.size() - 1) {
-						endBG_1.render(region.x + 5, region.y + region.height + (0.8f * region.height * index) - 3);
-						endBG_2.render(region.x + 5, region.y + region.height + (0.8f * region.height * index) - 3);
-						option.render(region.x + 23, region.y + region.height + (0.8f * region.height * index) + 2);
-						
-					} else {
-						innerBG.render(region.x - 8, region.y + region.height + (0.8f * region.height * index) - 3);
-						option.render(region.x + 23, region.y + region.height + (0.8f * region.height * index) + 2);
-					}
-					index++;
+		if (showOptions) {
+			int index = 0;
+			MouseInput input = InputSystem.getSystem().getEvent();
+			for (ComboBoxOption option : options.keySet()) {
+				if (index == options.size() - 1) {
+					endBG_1.render(region.x + 5, region.y + region.height + (0.8f * region.height * index) - 3);
+					endBG_2.render(region.x + 5, region.y + region.height + (0.8f * region.height * index) - 3);
+					
+				} else {
+					innerBG.render(region.x - 8, region.y + region.height + (0.8f * region.height * index) - 3);
 				}
-				index = 0;
-				for (ComboBoxOption option : options.keySet()) {
+				option.render(region.x + 23, region.y + region.height + (0.8f * region.height * index) + 2);
+				index++;
+			}
+			for (index = 0; index < options.keySet().size(); index++) {
+				glDisable(GL_TEXTURE_2D);
+				glColor4f(0, 0, 0, 0.1f);
+				glBegin(GL_QUADS);
+				if (contains(input, index)) {
 					if (index == options.size() - 1) {
-						if (input.x > region.x + 15 && input.y > region.y + region.height + (0.8f * region.height * index) + 2) {
-							if (input.x - (region.x + 15) < region.width + region.height - 23) {
-								if (input.y - (region.y + region.height + (0.8f * region.height * index) + 2) < region.height - 6) {
-									glDisable(GL_TEXTURE_2D);
-									glColor4f(0, 0, 0, 0.1f);
-									glBegin(GL_QUADS);
-									glVertex2f(region.x + 18, region.y + region.height + (0.5f * region.height * index) + 8);
-									glVertex2f(region.x + region.width + region.height - 9, region.y + region.height + (0.5f * region.height * index) + 8);
-									glVertex2f(region.x + region.width + region.height - 9, region.y + region.height + (0.5f * region.height * index) +  region.height + 2);
-									glVertex2f(region.x + 18, region.y + region.height + (0.5f * region.height * index) +  region.height + 2);
-									glEnd();
-									glColor3f(1, 1, 1);
-									glEnable(GL_TEXTURE_2D);
-								}
-							}
-						}
+						glVertex2f(region.x + 18, region.y + region.height + (0.5f * region.height * index) + 8);
+						glVertex2f(region.x + region.width + region.height - 9, region.y + region.height + (0.5f * region.height * index) + 8);
+						glVertex2f(region.x + region.width + region.height - 9, region.y + region.height + (0.5f * region.height * index) +  region.height + 2);
+						glVertex2f(region.x + 18, region.y + region.height + (0.5f * region.height * index) +  region.height + 2);
 					} else {
-						if (input.x > region.x + 15 && input.y > region.y + region.height + (0.8f * region.height * index) + 2) {
-							if (input.x - (region.x + 15) < region.width + region.height - 23) {
-								if (input.y - (region.y + region.height + (0.8f * region.height * index) + 2) < region.height - 6) {
-									glDisable(GL_TEXTURE_2D);
-									glColor4f(0, 0, 0, 0.1f);
-									glBegin(GL_QUADS);
-									glVertex2f(region.x + 18, region.y + region.height + (0.5f * region.height * index) + 3);
-									glVertex2f(region.x + region.width + region.height - 9, region.y + region.height + (0.5f * region.height * index) + 3);
-									glVertex2f(region.x + region.width + region.height - 9, region.y + region.height + (0.5f * region.height * index) - 3 +  region.height);
-									glVertex2f(region.x + 18, region.y + region.height + (0.5f * region.height * index) - 3 +  region.height);
-									glEnd();
-									glColor3f(1, 1, 1);
-									glEnable(GL_TEXTURE_2D);
-								}
-							}
-						}
+						glVertex2f(region.x + 18, region.y + region.height + (0.5f * region.height * index) + 3);
+						glVertex2f(region.x + region.width + region.height - 9, region.y + region.height + (0.5f * region.height * index) + 3);
+						glVertex2f(region.x + region.width + region.height - 9, region.y + region.height + (0.5f * region.height * index) - 3 +  region.height);
+						glVertex2f(region.x + 18, region.y + region.height + (0.5f * region.height * index) - 3 +  region.height);
 					}
-					index++;
 				}
+				glEnd();
+				glColor3f(1, 1, 1);
+				glEnable(GL_TEXTURE_2D);
 			}
 		}
 		ComboBoxOption selected = getSelected();

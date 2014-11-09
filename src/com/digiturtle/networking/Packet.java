@@ -1,7 +1,5 @@
 package com.digiturtle.networking;
 
-import java.util.Arrays;
-
 public class Packet {
 	
 	protected byte header;
@@ -35,8 +33,10 @@ public class Packet {
 	
 	public static Packet destruct(byte[] input) {
 		byte header = input[0];
-		byte[] string = new byte[input.length];
-		Arrays.copyOfRange(input, 1, input.length - 1);
+		byte[] string = new byte[input.length - 1];
+		for (int index = 1; index < input.length; index++) {
+			string[index - 1] = input[index];
+		}
 		String data = new String(string);
 		return new Packet(header, data.trim());
 	}

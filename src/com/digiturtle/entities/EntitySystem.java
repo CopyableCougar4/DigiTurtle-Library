@@ -24,7 +24,7 @@ public class EntitySystem {
 	
 	public void render(int folder) {
 		for (Entity entity : filedEntities.get(folder)) {
-			StaticVBO sprite = entity.getSprite();
+			Sprite sprite = entity.getSprite();
 			RotatedTransparencyRegion region = entity.getRegion();
 			float x = entity.getX();
 			float y = entity.getY();
@@ -102,7 +102,7 @@ public class EntitySystem {
 		cached.put(folder, new DisplayList(new Renderable() {
 			public void render() {
 				for (Entity entity : filedEntities.get(folder)) {
-					StaticVBO sprite = entity.getSprite();
+					Sprite sprite = entity.getSprite();
 					RotatedTransparencyRegion region = entity.getRegion();
 					float x = entity.getX();
 					float y = entity.getY();

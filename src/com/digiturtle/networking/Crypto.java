@@ -8,7 +8,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class Crypto {
 	
     private static final String ALGO = "AES";
-    private static final byte[] keyValue = "".getBytes();
+    private static final byte[] keyValue = "DigiTurtleGaming".getBytes();
 
 
 public static String encrypt(String Data) throws Exception {

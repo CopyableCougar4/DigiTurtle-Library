@@ -37,9 +37,10 @@ public class EditField implements Component {
 		this.region = region;
 		font = new GLFont(region.height - 12, theme);
 		charactersShown = 0;
-		while (font.getWidth(get("A", charactersShown)) < (region.width - 12)) {
+		while (font.getWidth(get("A", charactersShown)) < (region.width - font.getWidth("A"))) {
 			charactersShown++;
 		}
+		charactersShown--;
 		stylesheet = theme.get(target);
 		background = NinePatch.generate(new float[]{ 0, 0, 1, 0.5f }, region, stylesheet, new float[]{ 75, 50 });
 //		background = new StaticVBO(4, stylesheet.getID());
@@ -49,6 +50,25 @@ public class EditField implements Component {
 //		backgroundHighlight = new StaticVBO(4, stylesheet.getID());
 //		backgroundHighlight.uploadVertices(region);
 //		backgroundHighlight.uploadTextures(0, 0.5f, 1, 1);
+	}
+	public EditField(int layer, ComponentRegion region, Texture stylesheet, Theme theme) {
+		this.layer = layer;
+		this.region = region;
+		font = new GLFont(region.height - 12, theme);
+		charactersShown = 0;
+		while (font.getWidth(get("A", charactersShown)) < (region.width - font.getWidth("A"))) {
+			charactersShown++;
+		}
+		charactersShown--;
+		this.stylesheet = stylesheet;
+//		background = NinePatch.generate(new float[]{ 0, 0, 1, 0.5f }, region, stylesheet, new float[]{ 75, 50 });
+		background = new StaticVBO(4, stylesheet.getID());
+		background.uploadVertices(region);
+		background.uploadTextures(0, 0, 1, 0.5f);
+//		backgroundHighlight = NinePatch.generate(new float[]{ 0, 0.5f, 1, 1 }, region, stylesheet, new float[]{ 75, 50 });
+		backgroundHighlight = new StaticVBO(4, stylesheet.getID());
+		backgroundHighlight.uploadVertices(region);
+		backgroundHighlight.uploadTextures(0, 0.5f, 1, 1);
 	}
 	
 	private String get(String letter, int letters) {
@@ -149,11 +169,11 @@ public class EditField implements Component {
 			return;
 		}
 		if (keycode == Keyboard.KEY_BACK) {
-			input.deleteCharAt(pointer - 1);
+			input.deleteCharAt(Math.min(input.length() - 1, pointer - 1));
 			pointer--;
 		} 
 		else if(keycode == Keyboard.KEY_DELETE){
-			input.deleteCharAt(pointer);
+			input.deleteCharAt(Math.min(input.length() - 1, pointer));
 		}
 		else {
 			if (pointerShift) {
@@ -163,7 +183,7 @@ public class EditField implements Component {
 					pointer = Math.min(input.length(), pointer + 1);
 				}
 			} else {
-				input.insert(pointer, key);
+				input.insert(Math.max(0, Math.min(input.length(), pointer)), key);
 				pointer++;
 			}
 		}
@@ -211,10 +231,15 @@ public class EditField implements Component {
 		Color color = new Color(0, 0, 0);
 		String rawOutput = input.substring(Math.max(0, input.length() - charactersShown), input.length());
 		if (tick) {
-			String output = rawOutput.substring(0, pointer - Math.max(0, input.length() - charactersShown)) + "|" + rawOutput.substring( pointer - Math.max(0, input.length() - charactersShown), rawOutput.length());
-			font.drawText(getX() + 15, getY() + 4, output, color);
-			} else {
-			font.drawText(getX() + 15, getY() + 4, rawOutput, color);
+			String output = rawOutput;
+			font.drawText(getX() + (font.getWidth("A") / 2), getY() + 4, output, color);
+			float offset = (font.getWidth("A") / 2);
+			int startOf = input.length() - charactersShown;
+			int adjustedPointer = pointer - startOf;
+			offset += font.getWidth(output.substring(0, Math.min(output.length(), adjustedPointer)));
+			font.drawText(getX() + offset, getY() + 4, "|", color);
+		} else {
+			font.drawText(getX() + (font.getWidth("A") / 2), getY() + 4, rawOutput, color);
 		}
 		if (hover) {
 			runEffects();

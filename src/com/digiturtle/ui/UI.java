@@ -40,6 +40,16 @@ public class UI implements Component {
 		backgroundVBO.uploadTextures(0, 0, 1, 1);
 	}
 	
+	private Theme theme;
+	
+	public Theme getTheme() {
+		return theme;
+	}
+	
+	public void setTheme(Theme theme) {
+		this.theme = theme;
+	}
+	
 	public void setSize(float width, float height) {
 		uiRegion.width = width;
 		uiRegion.height = height;

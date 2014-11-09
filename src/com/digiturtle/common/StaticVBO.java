@@ -9,7 +9,9 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 
-public class StaticVBO {
+import com.digiturtle.entities.Sprite;
+
+public class StaticVBO implements Sprite {
 	
 	protected FloatBuffer vertexBuffer;
 	protected FloatBuffer textureBuffer;

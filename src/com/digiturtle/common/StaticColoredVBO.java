@@ -58,7 +58,7 @@ public class StaticColoredVBO {
 		// Bind this data to the VBO
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glBindBufferARB(GL_ARRAY_BUFFER_ARB, vertexHandle);
-	    glBufferDataARB(GL_ARRAY_BUFFER_ARB, vertexBuffer, GL_STATIC_DRAW_ARB);
+	    glBufferDataARB(GL_ARRAY_BUFFER_ARB, vertexBuffer, GL_DYNAMIC_DRAW_ARB);
 	    glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
 		glDisableClientState(GL_VERTEX_ARRAY);
 	}
@@ -83,7 +83,24 @@ public class StaticColoredVBO {
 		// Bind this data to the VBO
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glBindBufferARB(GL_ARRAY_BUFFER_ARB, vertexHandle);
-	    glBufferDataARB(GL_ARRAY_BUFFER_ARB, vertexBuffer, GL_STATIC_DRAW_ARB);
+	    glBufferDataARB(GL_ARRAY_BUFFER_ARB, vertexBuffer, GL_DYNAMIC_DRAW_ARB);
+	    glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
+		glDisableClientState(GL_VERTEX_ARRAY);
+	}
+	
+	public void reuploadVertices(Vertex[] vertices) {
+		vertexBuffer.clear();
+		// Upload all the vertex data
+		for (Vertex vertex : vertices) {
+			vertexBuffer.put(vertex.x);
+			vertexBuffer.put(vertex.y);
+			vertexBuffer.put(vertex.z);
+		}
+		vertexBuffer.flip();
+		// Bind this data to the VBO
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glBindBufferARB(GL_ARRAY_BUFFER_ARB, vertexHandle);
+	    glBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, vertexBuffer);
 	    glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
 		glDisableClientState(GL_VERTEX_ARRAY);
 	}
@@ -100,7 +117,7 @@ public class StaticColoredVBO {
 		// Bind this data to the VBO
 		glEnableClientState(GL_COLOR_ARRAY);
 		glBindBufferARB(GL_ARRAY_BUFFER_ARB, colorHandle);
-	    glBufferDataARB(GL_ARRAY_BUFFER_ARB, colorBuffer, GL_STATIC_DRAW_ARB);
+	    glBufferDataARB(GL_ARRAY_BUFFER_ARB, colorBuffer, GL_DYNAMIC_DRAW_ARB);
 	    glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
 		glDisableClientState(GL_COLOR_ARRAY);
 	}
@@ -126,7 +143,25 @@ public class StaticColoredVBO {
 		// Bind this data to the VBO
 		glEnableClientState(GL_COLOR_ARRAY);
 		glBindBufferARB(GL_ARRAY_BUFFER_ARB, colorHandle);
-	    glBufferDataARB(GL_ARRAY_BUFFER_ARB, colorBuffer, GL_STATIC_DRAW_ARB);
+	    glBufferDataARB(GL_ARRAY_BUFFER_ARB, colorBuffer, GL_DYNAMIC_DRAW_ARB);
+	    glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
+		glDisableClientState(GL_COLOR_ARRAY);
+	}
+	
+	public void reuploadColors(Color[] colors) {
+		colorBuffer.clear();
+		// Upload all the color data
+		for (Color color : colors) {
+			colorBuffer.put(color.r);
+			colorBuffer.put(color.g);
+			colorBuffer.put(color.b);
+			colorBuffer.put(color.a);
+		}
+		colorBuffer.flip();
+		// Bind this data to the VBO
+		glEnableClientState(GL_COLOR_ARRAY);
+		glBindBufferARB(GL_ARRAY_BUFFER_ARB, colorHandle);
+	    glBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, colorBuffer);
 	    glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
 		glDisableClientState(GL_COLOR_ARRAY);
 	}
@@ -184,6 +219,9 @@ public class StaticColoredVBO {
 		public float r, g, b, a;
 		public Color() {
 			
+		}
+		public Color(java.awt.Color color) {
+			this(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f);
 		}
 		public Color(Color color) {
 			this(color.r, color.g, color.b, color.a);

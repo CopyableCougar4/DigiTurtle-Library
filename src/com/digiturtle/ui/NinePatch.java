@@ -114,7 +114,7 @@ public class NinePatch {
 		try {	// Upload the center tiles
 			float heightOverall = 0, widthOverall;
 			float nx = region.x + sectionWidth, ny = region.y + sectionHeight;
-			while (heightOverall <= (region.height - (2 * sectionHeight))) {
+			while (heightOverall < (region.height - (2 * sectionHeight))) {
 				widthOverall = 0;
 				nx = region.x + sectionWidth;
 				while (widthOverall < (region.width - (2 * sectionWidth))) {

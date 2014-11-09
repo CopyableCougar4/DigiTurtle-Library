@@ -18,7 +18,7 @@ public interface Entity {
 	 *  AI
 	 */
 	
-	public StaticVBO getSprite();
+	public Sprite getSprite();
 	
 	public RotatedTransparencyRegion getRegion();
 	

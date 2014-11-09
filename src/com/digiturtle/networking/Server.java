@@ -84,7 +84,7 @@ public class Server {
 		}
 		alive = true;
 		while (isAlive()) {
-			byte[] data = new byte[1024];
+			byte[] data = new byte[2048];
 			DatagramPacket _packet = new DatagramPacket(data, data.length);
 			try {
 				socket.receive(_packet);
@@ -92,6 +92,7 @@ public class Server {
 				e.printStackTrace();
 			}
 			Packet packet = Packet.destruct(_packet.getData());
+			System.out.println(packet.getData() + " from " + _packet.getData().length + "bytes");
 			handlePacket(packet, _packet.getPort(), _packet.getAddress());
 		}
 	}

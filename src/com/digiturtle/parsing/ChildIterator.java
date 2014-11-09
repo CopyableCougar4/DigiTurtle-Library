@@ -23,6 +23,9 @@ public abstract class ChildIterator implements Iterator<Element> {
 	public Element next() {
 		if (!hasNext()) return null;
 		for (int index = lastElement; index < nodes.getLength(); index++) {
+			if (!(nodes.item(index) instanceof Element)) {
+				continue;
+			}
 			if (valid((Element) nodes.item(index))) {
 				lastElement = index;
 				return (Element) nodes.item(lastElement);

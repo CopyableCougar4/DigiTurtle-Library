@@ -7,7 +7,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
 
-public class Client {
+public class Client implements Runnable {
 
 	private ArrayList<PacketRouter> routers = new ArrayList<PacketRouter>();
 	
@@ -24,14 +24,19 @@ public class Client {
 	private DatagramSocket socket;
 	
 	public void sendPacket(Packet packet, InetAddress ip, int port) {
+		if (socket == null) throw new RuntimeException("invalid or unbound socket");
+		if (packet == null) throw new RuntimeException("packet == null");
+		if (ip == null) throw new RuntimeException("ip == null");
+		if (new Integer(port) == null) throw new RuntimeException("port == null");
 		try {
-			socket.send(new DatagramPacket(packet.construct(2048), 2048, ip, port));
+			DatagramPacket datagram = new DatagramPacket(packet.construct(2048), 2048, ip, port);
+			socket.send(datagram);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void start() {
+	public void run() {
 		try {
 			socket = new DatagramSocket();
 		} catch (SocketException e) {
@@ -40,7 +45,7 @@ public class Client {
 		}
 		alive = true;
 		while (isAlive()) {
-			byte[] data = new byte[1024];
+			byte[] data = new byte[2048];
 			DatagramPacket _packet = new DatagramPacket(data, data.length);
 			try {
 				socket.receive(_packet);
@@ -50,6 +55,10 @@ public class Client {
 			Packet packet = Packet.destruct(_packet.getData());
 			handlePacket(packet, _packet.getPort(), _packet.getAddress());
 		}
+	}
+	
+	public void start() {
+		new Thread(this).start();
 	}
 	
 	private boolean alive = false;

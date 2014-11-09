@@ -56,7 +56,7 @@ public class Texture {
 	
 	static int ID = 0;
 	public Texture(BufferedImage image, String filename) {
-		System.out.println(filename);
+//		System.out.println(filename);
 		this.filename = filename;
 		if (texturesLoaded.get(filename) != null) {
 			textureID = texturesLoaded.get(filename);
@@ -76,7 +76,7 @@ public class Texture {
 		this(rawTexture.data, rawTexture.width, rawTexture.height);
 	}
 	public Texture(byte[] rgbaRawData, int width, int height) {
-		ByteBuffer buffer = ByteBuffer.wrap(rgbaRawData);
+		ByteBuffer buffer = (ByteBuffer) BufferUtils.createByteBuffer(rgbaRawData.length).put(rgbaRawData).flip();
 		textureID = glGenTextures();
 		while (texturesLoaded.values().contains(textureID)) {
 			textureID = glGenTextures();
