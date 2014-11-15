@@ -18,15 +18,15 @@ public class Panel extends UI {
 	private Theme theme;
 	private int fontsize;
 	
-	public Panel(int layer, ComponentRegion region, Theme theme, String textureSrc, int fontsize) {
+	public Panel(int layer, ComponentRegion region, Theme theme, String[] textureSrc, int fontsize) {
 		super(region);
-		Texture texture = theme.unmapped(textureSrc);
+		Texture texture = theme.unmapped(textureSrc[0]);
 		background = new StaticVBO(4, texture.getID());
 		background.uploadVertices(region);
 		background.uploadTextures(0, 0, 1, 1);
 		this.theme = theme;
 		this.fontsize = fontsize;
-		close = new Button(layer, new ComponentRegion(region.x - 32, region.y + 2, 30, 30), texture) {
+		close = new Button(layer, new ComponentRegion(region.x - 32, region.y + 2, 30, 30), theme.unmapped(textureSrc[1])) {
 			public void click() {
 				if (visible) {
 					close();

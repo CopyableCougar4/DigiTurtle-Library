@@ -7,6 +7,8 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
 
+import com.digiturtle.common.Logger.LoggingSystem;
+
 public class Client implements Runnable {
 
 	private ArrayList<PacketRouter> routers = new ArrayList<PacketRouter>();
@@ -32,7 +34,7 @@ public class Client implements Runnable {
 			DatagramPacket datagram = new DatagramPacket(packet.construct(2048), 2048, ip, port);
 			socket.send(datagram);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LoggingSystem.error("IOException in sendPacket(Packet, InetAddress, int)", e);
 		}
 	}
 	
@@ -40,7 +42,7 @@ public class Client implements Runnable {
 		try {
 			socket = new DatagramSocket();
 		} catch (SocketException e) {
-			e.printStackTrace();
+			LoggingSystem.error("SocketException in run()", e);
 			return;
 		}
 		alive = true;
@@ -50,7 +52,7 @@ public class Client implements Runnable {
 			try {
 				socket.receive(_packet);
 			} catch (IOException e) {
-				e.printStackTrace();
+				LoggingSystem.error("IOException in run()", e);
 			}
 			Packet packet = Packet.destruct(_packet.getData());
 			handlePacket(packet, _packet.getPort(), _packet.getAddress());

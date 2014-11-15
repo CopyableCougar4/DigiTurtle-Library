@@ -7,6 +7,8 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.openal.AL;
 
+import com.digiturtle.common.Logger.LoggingSystem;
+
 import static org.lwjgl.openal.AL10.*;
 
 public class Sound {
@@ -25,7 +27,7 @@ public class Sound {
 		try {
 			AL.create();
 		} catch (LWJGLException e) {
-			e.printStackTrace();
+			LoggingSystem.error("LWJGLException in init()", e);
 		}
 		inited = true;
 	}
@@ -34,7 +36,7 @@ public class Sound {
 		if (!inited) init();
 		OggData decoder = OggDecoder.decode(inputStream);
 		if(loadALData(decoder) == AL_FALSE) {
-			System.out.println("Error loading data.");
+			LoggingSystem.warn("Error loading data.");
 			return;
 	    }
 	}
@@ -42,7 +44,7 @@ public class Sound {
 	public Sound(OggData decoder) {
 		if (!inited) init();
 		if(loadALData(decoder) == AL_FALSE) {
-			System.out.println("Error loading data.");
+			LoggingSystem.warn("Error loading data.");
 			return;
 	    }
 	}

@@ -11,6 +11,7 @@ import java.util.Properties;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import com.digiturtle.common.Logger.LoggingSystem;
 import com.digiturtle.common.Texture;
 
 public class Theme {
@@ -61,29 +62,29 @@ public class Theme {
 						Texture texture = Texture.loadTexture(jarEntry.getName(), jarFile.getInputStream(jarEntry));
 						if (filenameMap.containsKey(jarEntry.getName())) {
 							String targetName = filenameMap.get(jarEntry.getName());
-							System.out.println(texture.getID());
+							LoggingSystem.debug(String.valueOf(texture.getID()));
 							textureMap.put(targetName, texture);
 						} else {
-							System.out.println("unmapped resource. " + jarEntry.getName());
+							LoggingSystem.debug("unmapped resource. " + jarEntry.getName());
 							unmappedTextures.put(jarEntry.getName(), texture);
-							System.out.println("size = [ " + texture.getWidth() + "x" + texture.getHeight() + " ]");
-							System.out.println(unmappedTextures.size());
+							LoggingSystem.debug("size = [ " + texture.getWidth() + "x" + texture.getHeight() + " ]");
+							LoggingSystem.debug(String.valueOf(unmappedTextures.size()));
 						}
 					} 
 					else if (jarEntry.getName().endsWith(".ttf")) {
 						try {
 							FONT = Font.createFont(Font.TRUETYPE_FONT, jarFile.getInputStream(jarEntry));
 						} catch (FontFormatException e) {
-							e.printStackTrace();
+							LoggingSystem.error("FontFormatException in Theme(String)", e);
 						}
 					}
 					else {
-						System.out.println("Resource found: " + jarEntry.getName());
+						LoggingSystem.debug("Resource found: " + jarEntry.getName());
 					}
 				}
 				jarFile.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				LoggingSystem.error("IOException in Theme(String)", e);
 			}
 		}
 	}

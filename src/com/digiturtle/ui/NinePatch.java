@@ -1,6 +1,7 @@
 package com.digiturtle.ui;
 
 import com.digiturtle.common.ComponentRegion;
+import com.digiturtle.common.Logger.LoggingSystem;
 import com.digiturtle.common.StaticVBO;
 import com.digiturtle.common.StaticVBO.TexCoord;
 import com.digiturtle.common.StaticVBO.Vertex;
@@ -25,6 +26,7 @@ public class NinePatch {
 		allCoordinates[pointer + 3] = new TexCoord(coords[0], coords[3]);
 	}
 	
+	// Exception in generate(float[], ComponentRegion, int, int, Texture, float[])
 	protected static StaticVBO generate(float[] texcoords, ComponentRegion region, int rows, int cols, Texture texture, float[] textureSize) {
 		float sectionWidth = textureSize[0] / cols * (texcoords[2] - texcoords[0]);
 		float sectionHeight = textureSize[1] / rows * (texcoords[3] - texcoords[1]);
@@ -45,10 +47,10 @@ public class NinePatch {
 		int cellCountHeight = (int) Math.floor(region.height / sectionHeight);
 		StaticVBO resultant = new StaticVBO(cellCountWidth * cellCountHeight * 4 + ((cellCountHeight + cellCountWidth + 2) * 4), texture.getID());
 		int pointer = 0;
-		System.out.println(sectionWidth + "x" + sectionHeight + " -- " + cellCountWidth + "x" + cellCountHeight);
+		LoggingSystem.debug(sectionWidth + "x" + sectionHeight + " -- " + cellCountWidth + "x" + cellCountHeight);
 		Vertex[] allVertices = new Vertex[cellCountWidth * cellCountHeight * 4 + ((cellCountHeight + cellCountWidth + 2) * 4)];
 		TexCoord[] allCoordinates = new TexCoord[cellCountWidth * cellCountHeight * 4 + ((cellCountHeight + cellCountWidth + 2) * 4)];
-		System.out.println(allVertices.length);
+		LoggingSystem.debug(String.valueOf(allVertices.length));
 		try {	// Upload the top row
 			float widthOverall = 0;
 			float nx = region.x + sectionWidth, ny = region.y;
@@ -56,9 +58,9 @@ public class NinePatch {
 				upload(allVertices, allCoordinates, nx, ny, sectionWidth, sectionHeight, topCoords, pointer);
 				nx += sectionWidth;
 				widthOverall += sectionWidth;
-				pointer += 4; System.out.println("Top block");
+				pointer += 4; LoggingSystem.debug("Top block");
 			}
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { LoggingSystem.error("Exception in generate(float[], ComponentRegion, int, int, Texture, float[])", e); }
 		try {	// Upload the left column
 			float heightOverall = 0;
 			float nx = region.x, ny = region.y + sectionHeight;
@@ -66,9 +68,9 @@ public class NinePatch {
 				upload(allVertices, allCoordinates, nx, ny, sectionWidth, sectionHeight, leftCoords, pointer);
 				ny += sectionHeight;
 				heightOverall += sectionHeight;
-				pointer += 4; System.out.println("Left block");
+				pointer += 4; LoggingSystem.debug("Left block");
 			}
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { LoggingSystem.error("Exception in generate(float[], ComponentRegion, int, int, Texture, float[])", e); }
 		try {	// Upload the right column
 			float heightOverall = 0;
 			float nx = region.x + region.width - sectionWidth, ny = region.y + sectionHeight;
@@ -76,9 +78,9 @@ public class NinePatch {
 				upload(allVertices, allCoordinates, nx, ny, sectionWidth, sectionHeight, rightCoords, pointer);
 				ny += sectionHeight;
 				heightOverall += sectionHeight;
-				pointer += 4; System.out.println("Right block");
+				pointer += 4; LoggingSystem.debug("Right block");
 			}
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { LoggingSystem.error("Exception in generate(float[], ComponentRegion, int, int, Texture, float[])", e); }
 		try {	// Upload the bottom row
 			float widthOverall = 0;
 			float nx = region.x + sectionWidth, ny = region.y + region.height - sectionHeight;
@@ -86,31 +88,31 @@ public class NinePatch {
 				upload(allVertices, allCoordinates, nx, ny, sectionWidth, sectionHeight, bottomCoords, pointer);
 				nx += sectionWidth;
 				widthOverall += sectionWidth;
-				pointer += 4; System.out.println("Bottom block");
+				pointer += 4; LoggingSystem.debug("Bottom block");
 			}
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { LoggingSystem.error("Exception in generate(float[], ComponentRegion, int, int, Texture, float[])", e); }
 		try {	// Upload the top left
 				float nx = region.x, ny = region.y;
 				upload(allVertices, allCoordinates, nx, ny, sectionWidth, sectionHeight, topleftCoords, pointer);
-				pointer += 4; System.out.println("Top left block");
-		} catch (Exception e) { e.printStackTrace(); }
+				pointer += 4; LoggingSystem.debug("Top left block");
+		} catch (Exception e) { LoggingSystem.error("Exception in generate(float[], ComponentRegion, int, int, Texture, float[])", e); }
 		try {	// Upload the top right
 				float nx = region.x + region.width - sectionWidth, ny = region.y;
 				upload(allVertices, allCoordinates, nx, ny, sectionWidth, sectionHeight, topRightCoords, pointer);
-				pointer += 4; System.out.println("Top right block");
-		} catch (Exception e) { e.printStackTrace(); }
+				pointer += 4; LoggingSystem.debug("Top right block");
+		} catch (Exception e) { LoggingSystem.error("Exception in generate(float[], ComponentRegion, int, int, Texture, float[])", e); }
 		try {	// Upload the bottom left
 				float nx = region.x, ny = region.y + region.height
 						- sectionHeight;
 				upload(allVertices, allCoordinates, nx, ny, sectionWidth, sectionHeight, bottomLeftCoords, pointer);
-				pointer += 4; System.out.println("Bottom left block");
-		} catch (Exception e) { e.printStackTrace(); }
+				pointer += 4; LoggingSystem.debug("Bottom left block");
+		} catch (Exception e) { LoggingSystem.error("Exception in generate(float[], ComponentRegion, int, int, Texture, float[])", e); }
 		try {	// Upload the bottom right
 				float nx = region.x + region.width - sectionWidth, ny = region.y
 						+ region.height - sectionHeight;
 				upload(allVertices, allCoordinates, nx, ny, sectionWidth, sectionHeight, bottomRightCoords, pointer);
-				pointer += 4; System.out.println("Bottom right block");
-		} catch (Exception e) { e.printStackTrace(); }
+				pointer += 4; LoggingSystem.debug("Bottom right block");
+		} catch (Exception e) { LoggingSystem.error("Exception in generate(float[], ComponentRegion, int, int, Texture, float[])", e); }
 		try {	// Upload the center tiles
 			float heightOverall = 0, widthOverall;
 			float nx = region.x + sectionWidth, ny = region.y + sectionHeight;
@@ -126,7 +128,7 @@ public class NinePatch {
 				}
 				ny += sectionHeight;
 				heightOverall += sectionHeight;
-				System.out.println("Center block");
+				LoggingSystem.debug("Center block");
 			}
 			widthOverall = 0;
 			nx = region.x + sectionWidth;
@@ -139,8 +141,8 @@ public class NinePatch {
 //				widthOverall += sectionWidth;
 //			}
 //			heightOverall += sectionHeight;
-//			System.out.println("Center block");
-		} catch (Exception e) { e.printStackTrace(); }
+//			LoggingSystem.debug("Center block");
+		} catch (Exception e) { LoggingSystem.error("Exception in generate(float[], ComponentRegion, int, int, Texture, float[])", e); }
 		int nonnull = 0;
 		for (Vertex vertex : allVertices) if (vertex != null) nonnull++;
 		Vertex[] vertices = new Vertex[nonnull];

@@ -8,6 +8,7 @@ import java.nio.ByteOrder;
 
 import org.lwjgl.BufferUtils;
 
+import com.digiturtle.common.Logger.LoggingSystem;
 import com.jcraft.jogg.Packet;
 import com.jcraft.jogg.Page;
 import com.jcraft.jogg.StreamState;
@@ -85,7 +86,7 @@ public class OggDecoder extends InputStream {
 						break; // get more data
 					}
 					if (result == -1) {
-						System.out.println("Corrupt or missing data in bitstream");
+						LoggingSystem.debug("Corrupt or missing data in bitstream");
 					} else {
 						streamState.pagein(page); // stream the page to turn synced data into ogg pages
 						while (true) {
@@ -138,7 +139,7 @@ public class OggDecoder extends InputStream {
 									// read the decoded PCM data into the resulting buffer
 									int bytesToWrite = 2 * oggInfo.channels * bout;
 									if (bytesToWrite >= pcmBuffer.remaining()) {
-										System.out.println("Read block from OGG that was too big to be buffered: " + bytesToWrite);
+										LoggingSystem.debug("Read block from OGG that was too big to be buffered: " + bytesToWrite);
 									} else {
 										pcmBuffer.put(convbuffer, 0, bytesToWrite);
 									}
@@ -162,12 +163,12 @@ public class OggDecoder extends InputStream {
 					if (index >= 0) {
 						buffer = syncState.data;
 						try {
-						bytes = inputStream.read(buffer, index, 4096);
+							bytes = inputStream.read(buffer, index, 4096);
 						} catch (Exception e) {
-						System.out.println("Failure during vorbis decoding");
-						e.printStackTrace(System.out);
-						endOfStream = true;
-						return;
+							LoggingSystem.debug("Failure during vorbis decoding");
+							LoggingSystem.error("Exception in readPCM()", e);
+							endOfStream = true;
+							return;
 						}
 					} else {
 						bytes = 0;
@@ -199,8 +200,8 @@ public class OggDecoder extends InputStream {
 		try {
 			bytes = inputStream.read(buffer, index, 4096); // read a block of raw data
 		} catch (Exception e) {
-			System.out.println("Failure reading in vorbis");
-			e.printStackTrace(System.out);
+			LoggingSystem.debug("Failure reading in vorbis");
+			LoggingSystem.error("Exception in getPageAndPacket()", e);
 			endOfStream = true;
 			return false;
 		}
@@ -211,7 +212,7 @@ public class OggDecoder extends InputStream {
 			if (bytes < 4096)
 				return false;
 			// error case.  Must not be Vorbis data
-			System.out.println("Input does not appear to be an Ogg bitstream.");
+			LoggingSystem.debug("Input does not appear to be an Ogg bitstream.");
 			endOfStream = true;
 			return false;
 		}
@@ -222,21 +223,21 @@ public class OggDecoder extends InputStream {
 		comment.init();
 		if (streamState.pagein(page) < 0) {
 			// error; stream version mismatch perhaps
-			System.out.println("Error reading first page of Ogg bitstream data.");
+			LoggingSystem.debug("Error reading first page of Ogg bitstream data.");
 			endOfStream = true;
 			return false;
 		}
 
 		if (streamState.packetout(packet) != 1) {
 			// no page? must not be vorbis
-			System.out.println("Error reading initial header packet.");
+			LoggingSystem.debug("Error reading initial header packet.");
 			endOfStream = true;
 			return false;
 		}
 
 		if (oggInfo.synthesis_headerin(comment, packet) < 0) {
 			// error case; not a vorbis header
-			System.out.println("This Ogg bitstream does not contain Vorbis audio data.");
+			LoggingSystem.debug("This Ogg bitstream does not contain Vorbis audio data.");
 			endOfStream = true;
 			return false;
 		}
@@ -255,7 +256,7 @@ public class OggDecoder extends InputStream {
 							break;
 						if (result == -1) {
 							// Data at some point was corrupted or missing!
-							System.out.println("Corrupt secondary header.  Exiting.");
+							LoggingSystem.debug("Corrupt secondary header.  Exiting.");
 							endOfStream = true;
 							return false;
 						}
@@ -270,13 +271,13 @@ public class OggDecoder extends InputStream {
 			try {
 				bytes = inputStream.read(buffer, index, 4096);	// read the next block
 			} catch (Exception e) {
-				System.out.println("Failed to read Vorbis: ");
-				e.printStackTrace(System.out);
+				LoggingSystem.debug("Failed to read Vorbis: ");
+				LoggingSystem.error("Exception in getPageAndPacket()", e);
 				endOfStream = true;
 				return false;
 			}
 			if (bytes == 0 && i < 2) {
-				System.out.println("End of file before finding all Vorbis headers!");
+				LoggingSystem.debug("End of file before finding all Vorbis headers!");
 				endOfStream = true;
 				return false;
 			}
@@ -328,7 +329,7 @@ public class OggDecoder extends InputStream {
 					}
 				}
 			} catch (IOException e) {
-				e.printStackTrace(System.out);
+				LoggingSystem.error("IOException in read(byte[], int, int)", e);
 				return i;
 			}
 		}

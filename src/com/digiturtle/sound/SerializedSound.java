@@ -9,6 +9,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 
+import com.digiturtle.common.Logger.LoggingSystem;
+
 public class SerializedSound {
 	
 	// Store a sound
@@ -27,7 +29,7 @@ public class SerializedSound {
 		try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(IN));) {
 			return ((SoundObject) objectInputStream.readObject()).getOgg();
 		} catch (IOException | ClassNotFoundException e) {
-			e.printStackTrace();
+			LoggingSystem.error("Exception in getOggData(String)", e);
 			return null;
 		}		
 	}

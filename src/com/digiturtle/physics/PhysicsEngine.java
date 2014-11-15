@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.lwjgl.input.Keyboard;
 
 import com.digiturtle.common.FastRand;
+import com.digiturtle.common.Logger.LoggingSystem;
 
 public class PhysicsEngine {
 
@@ -33,9 +34,14 @@ public class PhysicsEngine {
 	}
 	
 	public static PhysicsPoint accelerate(float angleDegrees, float velocity, int keycode) {
+		if (!(keycode == Keyboard.KEY_W || keycode == Keyboard.KEY_A || keycode == Keyboard.KEY_S || keycode == Keyboard.KEY_D)) {
+			velocity = 0;
+		}
 		angleDegrees = rotate(angleDegrees, keycode);
 		float dx = velocity * (float)Math.sin(Math.toRadians(angleDegrees));
 		float dy = velocity * (float)Math.cos(Math.toRadians(angleDegrees));
+		LoggingSystem.debug("keycode: " + keycode + " / velocity: " + velocity + " / angle (degrees): " + angleDegrees);
+		LoggingSystem.debug("dx: " + dx + " / dy: " + dy);
 		return new PhysicsPoint(dx, dy);
 	}
 	

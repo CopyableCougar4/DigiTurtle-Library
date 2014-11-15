@@ -12,6 +12,7 @@ import org.xml.sax.SAXException;
 
 import com.digiturtle.common.ComponentRegion;
 import com.digiturtle.common.Dimension;
+import com.digiturtle.common.Logger.LoggingSystem;
 import com.digiturtle.common.Renderable.IRenderable;
 import com.digiturtle.common.Texture;
 import com.digiturtle.parsing.ChildIterator;
@@ -26,7 +27,7 @@ public class UIFactory {
 		try {
 			reader = new XMLReader(file, "screen");
 		} catch (ParserConfigurationException | SAXException | IOException e) {
-			e.printStackTrace();
+			LoggingSystem.error("Exception in buildFromXML(File)", e);
 		}
 		Element uiXML = (Element) reader.getNodes("ui").item(0);
 		return buildFromXML(uiXML);
@@ -50,7 +51,7 @@ public class UIFactory {
 					String background = uiXML.getAttribute("background");
 					ui.setTheme(theme);
 					if (theme.unmapped(background) != null) {
-						System.out.println("Mapping background: " + background);
+						LoggingSystem.debug("Mapping background: " + background);
 						ui.setBackground(background, theme);
 					}
 				} 

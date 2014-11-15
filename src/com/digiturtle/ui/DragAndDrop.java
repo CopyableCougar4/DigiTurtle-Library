@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 import org.lwjgl.input.Mouse;
 
+import com.digiturtle.common.Logger.LoggingSystem;
+
 public abstract class DragAndDrop implements ExternalListener {
 
 	public boolean wasDown = false;
@@ -48,18 +50,18 @@ public abstract class DragAndDrop implements ExternalListener {
 		Mouse.poll();
 		boolean isDown = Mouse.isButtonDown(0); 
 		if (down != isDown) { 
-			System.out.println("The mouse was down at trigger, but not anymore.");
+			LoggingSystem.debug("The mouse was down at trigger, but not anymore.");
 			down = isDown;
 		}
 		if (wasDown) {
 			if (!down) {
-				System.out.println("Ending drag at " + x + "," + y);
+				LoggingSystem.debug("Ending drag at " + x + "," + y);
 				endDrag();
 				dragging = false;
 			}
 		} else {
 			if (down) {
-				System.out.println("Starting drag at " + x + "," + y);
+				LoggingSystem.debug("Starting drag at " + x + "," + y);
 				boolean valid = true;
 				loop: for (Component component : overlappingComponents) {
 					if (component.getRegion().contains(x, y)) {
@@ -75,7 +77,7 @@ public abstract class DragAndDrop implements ExternalListener {
 		int dy = getDY(x, y, down);
 		if (dragging) {
 			drag(dx, dy);
-			System.out.println("dragging " + dx + "," + dy);
+			LoggingSystem.debug("dragging " + dx + "," + dy);
 		}
 		wasDown = down;
 	}

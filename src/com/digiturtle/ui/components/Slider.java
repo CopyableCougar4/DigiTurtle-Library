@@ -10,6 +10,7 @@ import com.digiturtle.ui.DragAndDrop;
 import com.digiturtle.ui.Effect;
 import com.digiturtle.ui.InputSystem;
 import com.digiturtle.common.ComponentRegion;
+import com.digiturtle.common.Logger.LoggingSystem;
 import com.digiturtle.common.StaticVBO;
 import com.digiturtle.common.Texture;
 import com.digiturtle.ui.Theme;
@@ -69,9 +70,9 @@ public class Slider implements Component {
 			}
 			@Override
 			public void startDrag(int startx, int starty) {
-				System.out.println("Dragging from " + startx + "," + starty);
+				LoggingSystem.debug("Dragging from " + startx + "," + starty);
 				dragging = region.contains(startx, starty);
-				System.out.println(dragging);
+				LoggingSystem.debug(String.valueOf(dragging));
 			}
 
 			@Override

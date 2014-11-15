@@ -10,6 +10,9 @@ import org.lwjgl.LWJGLUtil;
 import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+
+import com.digiturtle.common.Logger.LoggingSystem;
+
 import static org.lwjgl.opengl.GL11.*;
 
 
@@ -31,7 +34,7 @@ public class OSUtil {
 			Cursor cursor = new Cursor(1, 1, 0, 0, 1, buffer, null);
 			Mouse.setNativeCursor(cursor);
 		} catch (LWJGLException e) {
-			e.printStackTrace();
+			LoggingSystem.error("LWJGLException in wipeCursor()", e);
 		}
 	}
 	

@@ -37,6 +37,10 @@ public class StaticVBO implements Sprite {
 		this.form = form;
 	}
 	
+	public int getTextureID() {
+		return textureID;
+	}
+	
 	public void uploadVertices(ComponentRegion region) {
 		Vertex v1 = Vertex.get(region.x, region.y);
 		Vertex v2 = Vertex.get(region.x + region.width, region.y);
@@ -175,12 +179,27 @@ public class StaticVBO implements Sprite {
 		}
 		
 	}
+	
+	public static StaticVBO getVBO(int id, ComponentRegion region, float tx, float ty, float tx2, float ty2) {
+		StaticVBO vbo = new StaticVBO(4, id);
+		vbo.uploadVertices(region);
+		vbo.uploadTextures(tx, ty, tx2, ty2);
+		return vbo;
+	}
 
 	public static StaticVBO getVBO(Texture texture, ComponentRegion region, float tx, float ty, float tx2, float ty2) {
 		StaticVBO vbo = new StaticVBO(4, texture.getID());
 		vbo.uploadVertices(region);
 		vbo.uploadTextures(tx, ty, tx2, ty2);
 		return vbo;
+	}
+	
+	public static StaticVBO getVBO(int id, ComponentRegion region) {
+		return getVBO(id, region, 0, 0, 1, 1);
+	}
+	
+	public static StaticVBO getVBO(Texture texture, ComponentRegion region) {
+		return getVBO(texture, region, 0, 0, 1, 1);
 	}
 
 }

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.digiturtle.common.FastRand;
+import com.digiturtle.common.Logger.LoggingSystem;
 
 public class Server {
 
@@ -23,7 +24,7 @@ public class Server {
 		try {
 			ip = InetAddress.getByName("127.0.0.1");
 		} catch (UnknownHostException e) {
-			e.printStackTrace();
+			LoggingSystem.error("UnknownHostException in Server(int)", e);
 		}
 	}
 	public Server(int port, String ip) {
@@ -31,7 +32,7 @@ public class Server {
 		try {
 			this.ip = InetAddress.getByName(ip);
 		} catch (UnknownHostException e) {
-			e.printStackTrace();
+			LoggingSystem.error("UnknownHostException in Server(int, String)", e);
 		}
 	}
 	
@@ -61,14 +62,14 @@ public class Server {
 		try {
 			socket.send(new DatagramPacket(packet.construct(2048), 2048));
 		} catch (IOException e) {
-			e.printStackTrace();
+			LoggingSystem.error("IOException in sendPacket(Packet)", e);
 		}
 	}
 	public void sendPacket(Packet packet, InetAddress ip, int port) {
 		try {
 			socket.send(new DatagramPacket(packet.construct(2048), 2048, ip, port));
 		} catch (IOException e) {
-			e.printStackTrace();
+			LoggingSystem.error("IOException in sendPacket(Packet, InetAddress, int)", e);
 		}
 	}
 	
@@ -77,9 +78,9 @@ public class Server {
 	public void start() {
 		try {
 			socket = new DatagramSocket(port, ip);
-			System.out.println("Server Started: " + ip.getHostAddress() + ":" + port);
+			LoggingSystem.debug("Server Started: " + ip.getHostAddress() + ":" + port);
 		} catch (SocketException e) {
-			e.printStackTrace();
+			LoggingSystem.error("SocketException in start()", e);
 			return;
 		}
 		alive = true;
@@ -89,10 +90,10 @@ public class Server {
 			try {
 				socket.receive(_packet);
 			} catch (IOException e) {
-				e.printStackTrace();
+				LoggingSystem.error("IOException in start()", e);
 			}
 			Packet packet = Packet.destruct(_packet.getData());
-			System.out.println(packet.getData() + " from " + _packet.getData().length + "bytes");
+			LoggingSystem.debug(packet.getData() + " from " + _packet.getData().length + "bytes");
 			handlePacket(packet, _packet.getPort(), _packet.getAddress());
 		}
 	}

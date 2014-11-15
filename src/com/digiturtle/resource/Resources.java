@@ -14,6 +14,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.digiturtle.common.Logger.LoggingSystem;
 import com.digiturtle.parsing.XMLReader;
 
 public class Resources {
@@ -55,6 +56,10 @@ public class Resources {
 						Element parentElement = (Element) xmlReader.getNodes("resources").item(0);
 						NodeList children = parentElement.getChildNodes();
 						for (int index = 0; index < children.getLength(); index++) {
+							if (!(children.item(index) instanceof Element)) {
+								LoggingSystem.warn("Invalid: " + children.item(index));
+								continue;
+							}
 							Element element = (Element) children.item(index);
 							if (element.getTagName().equalsIgnoreCase("vbo")) {
 								VBOResource resource = new VBOResource(element.getAttribute("source"), 
@@ -63,18 +68,18 @@ public class Resources {
 								resources.put(element.getAttribute("source"), resource);
 							} 
 							else if (element.getTagName().equalsIgnoreCase("text")) {
-								String text = element.getAttribute("text");
+								String text = element.getAttribute("value");
 								resources.put(element.getAttribute("title"), new TextResource(element.getAttribute("title"), text));
 							}
 						}
 					} catch (ParserConfigurationException | SAXException e) {
-						e.printStackTrace();
+						LoggingSystem.error("XML Exception in load()", e);
 					}
 				}
 			}
 			jarFile.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			LoggingSystem.error("IOException in load()", e);
 		}
 	}
 	

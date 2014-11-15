@@ -15,6 +15,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import com.digiturtle.common.Logger.LoggingSystem;
 import com.digiturtle.ui.Component;
 import com.digiturtle.ui.UI;
 
@@ -27,7 +28,7 @@ public class Nashorn {
         try {
             nashorn.eval(getFile(file));
         } catch (ScriptException e) {
-            e.printStackTrace();
+           LoggingSystem.error("ScriptException in parseJavaScript(File)", e);
         }
 	}
 	
@@ -36,13 +37,13 @@ public class Nashorn {
         try {
             nashorn.eval(filter(ui, getFile(file)));
         } catch (ScriptException e) {
-            e.printStackTrace();
+            LoggingSystem.error("ScriptException in parseJavaScript(File, String, UI)", e);
         }
 		Invocable invokeEngine = (Invocable) nashorn;
 		try {
 			invokeEngine.invokeFunction(function);
 		} catch (NoSuchMethodException | ScriptException e) {
-			e.printStackTrace();
+            LoggingSystem.error("NoSuchMethodException or ScriptException in parseJavaScript(File, String, UI)", e);
 		}
 	}
 	
@@ -64,9 +65,9 @@ public class Nashorn {
 				reflectedMethod.setAccessible(true);
 				value = "\"" + String.valueOf(reflectedMethod.invoke(component)) + "\"";
 			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				e.printStackTrace();
+				LoggingSystem.error("Exception in filter(UI, String)", e);
 			}
-			System.out.println(match + " --> " + value);
+			LoggingSystem.debug(match + " --> " + value);
 			string = string.replace(match, value);
 		}
 		return string;
@@ -78,13 +79,13 @@ public class Nashorn {
         try {
         	nashorn.eval(filter(ui, getFile(file)));
         } catch (ScriptException e) {
-            e.printStackTrace();
+        	LoggingSystem.error("ScriptException in parseJavaScript(File, String, UI, Object[])", e);
         }
 		Invocable invokeEngine = (Invocable) nashorn;
 		try {
 			invokeEngine.invokeFunction(function, args);
 		} catch (NoSuchMethodException | ScriptException e) {
-			e.printStackTrace();
+		     LoggingSystem.error("NoSuchMethodException or ScriptException in parseJavaScript(File, String, UI, Object[])", e);
 		}
 	}
 	
@@ -101,7 +102,7 @@ public class Nashorn {
 			fileDataMap.put(file.getName(), output);
 			return output;
 		} catch (IOException e) {
-			e.printStackTrace();
+			LoggingSystem.error("IOException in getFile(File)", e);
 			return "";
 		}
 		

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
+import com.digiturtle.common.Logger.LoggingSystem;
 import com.digiturtle.common.StaticColoredVBO.Color;
 import com.digiturtle.common.StaticColoredVBO.Vertex;
 
@@ -96,7 +97,7 @@ public class SplineInterpolater {
 			for(i=k; i<m; i++) if(A[i][k]>vali) { i_max = i; vali = A[i][k];}
 			A = swapRows(A, k, i_max);
 			
-			if(A[i_max][i] == 0) System.out.println("matrix is singular!");
+			if(A[i_max][i] == 0) LoggingSystem.warn("matrix is singular!");
 			
 			// for all rows below pivot
 			for(i=k+1; i<m; i++)

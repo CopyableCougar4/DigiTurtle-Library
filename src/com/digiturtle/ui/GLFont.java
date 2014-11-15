@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 import com.digiturtle.common.ComponentRegion;
 import com.digiturtle.common.DisplayList;
+import com.digiturtle.common.Logger.LoggingSystem;
 import com.digiturtle.common.Renderable;
 import com.digiturtle.common.StaticVBO;
 import com.digiturtle.common.Texture;
@@ -36,7 +37,7 @@ public class GLFont {
 	public static class IntObject {
 		public int x, y, width, height;
 		public void debug() {
-			System.out.println("IntObject[x=" + x + ",y=" + y + ",width=" + width + ",height=" + height + "]");
+			LoggingSystem.debug("IntObject[x=" + x + ",y=" + y + ",width=" + width + ",height=" + height + "]");
 		}
 	}
 	

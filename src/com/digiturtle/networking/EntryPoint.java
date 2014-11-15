@@ -6,6 +6,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 
+import com.digiturtle.common.Logger.LoggingSystem;
+
 // Entry point to a client
 
 public class EntryPoint {
@@ -20,7 +22,7 @@ public class EntryPoint {
 		try {
 			socket = new DatagramSocket(port, ip);
 		} catch (SocketException e) {
-			e.printStackTrace();
+			LoggingSystem.error("SocketException in EntryPoint(InetAddress, int)", e);
 		}
 	}
 	
@@ -30,7 +32,7 @@ public class EntryPoint {
 			try {
 				socket.send(datagram);
 			} catch (IOException e) {
-				e.printStackTrace();
+				LoggingSystem.error("IOException in sendPacket(Packet)", e);
 			}
 		}
 	}

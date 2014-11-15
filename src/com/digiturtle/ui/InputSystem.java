@@ -16,6 +16,7 @@ public class InputSystem {
 	
 	private ArrayList<Component> components = new ArrayList<Component>();
 	private ArrayList<ExternalListener> externalListeners = new ArrayList<ExternalListener>();
+	private ArrayList<KeyEventHandler> keyHandlers = new ArrayList<KeyEventHandler>();
 
 	// Protect instantiation
 	private InputSystem() {
@@ -32,6 +33,10 @@ public class InputSystem {
 	
 	public void attachListener(ExternalListener listener) {
 		externalListeners.add(listener);
+	}
+	
+	public void attachHandler(KeyEventHandler handler) {
+		keyHandlers.add(handler);
 	}
 	
 	public static InputSystem getSystem() {
@@ -84,6 +89,10 @@ public class InputSystem {
 				}
 			}
 		}
+		// Read the active state
+		for (int key = 0; key < Keyboard.KEYBOARD_SIZE; key++) {
+			key(key, Keyboard.isKeyDown(key));
+		}
 		// Mouse Input
 		while (Mouse.next()) {
 			int button = Mouse.getEventButton();
@@ -133,6 +142,13 @@ public class InputSystem {
 		for (int index = 0; index < components.size(); index++) {
 			Component component = components.get(index);
 			component.key(keycode);
+		}
+	}
+	
+	public void key(int keycode, boolean down) {
+		for (int index = 0; index < keyHandlers.size(); index++) {
+			KeyEventHandler listener = keyHandlers.get(index);
+			listener.key(keycode, down);
 		}
 	}
 	

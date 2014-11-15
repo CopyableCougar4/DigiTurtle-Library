@@ -13,6 +13,8 @@ import javax.imageio.ImageIO;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL12;
 
+import com.digiturtle.common.Logger.LoggingSystem;
+
 import static org.lwjgl.opengl.GL11.*;
 
 public class Texture {
@@ -41,7 +43,7 @@ public class Texture {
 			if (file != null) {
 				
 			}
-			e.printStackTrace();
+			LoggingSystem.error("IOException in loadTexture(String, InputStream)", e);
 			return null;
 		}
 	}
@@ -56,7 +58,6 @@ public class Texture {
 	
 	static int ID = 0;
 	public Texture(BufferedImage image, String filename) {
-//		System.out.println(filename);
 		this.filename = filename;
 		if (texturesLoaded.get(filename) != null) {
 			textureID = texturesLoaded.get(filename);
